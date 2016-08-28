@@ -2,5 +2,7 @@
 
 (defpackage #:vcr
   (:use #:cl)
-  (:export :with-vcr))
+  (:export :*shelf*
+	   :tape-path ; not really needed, but can be useful
+	   :with-vcr))
 

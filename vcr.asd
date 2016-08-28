@@ -1,10 +1,20 @@
 ;;;; vcr.asd
 
 (asdf:defsystem #:vcr
-  :description "Recordings"
+  :description "Store and replay results of http calls for easier testing of external services"
   :author "Petko Tsikov <tsikov@gmail.com>"
   :license "Public Domain"
   :serial t
   :components ((:file "package")
                (:file "vcr"))
-  :depends-on (:drakma))
+  :depends-on (:drakma)
+  :in-order-to ((test-op (test-op vcr-test))))
+
+(asdf:defsystem #:vcr-test
+  :description "Test the vcr library"
+  :depends-on (:vcr
+               :prove)
+  :defsystem-depends-on (:prove-asdf)
+  :components ((:test-file "tests"))
+  :perform (test-op :after (op c)
+                    (funcall (intern #.(string :run) :prove) c)))

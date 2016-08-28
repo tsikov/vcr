@@ -2,9 +2,13 @@
 
 (setf (symbol-function 'original-fn) #'drakma:http-request)
 
-;; FIXME
+(defvar *shelf* "/tmp/vcr/")
+
 (defun tape-path (tape)
-  (concatenate 'string "/tmp/vcr/" tape ".lisp"))
+  ;; The following line is inside here, because *shelf*
+  ;; can be changed dynamically.
+  (ensure-directories-exist *shelf*)
+  (concatenate 'string *shelf* tape ".lisp"))
 
 (defun read-tape (tape)
   (let ((tape-path (tape-path tape)))
