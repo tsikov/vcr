@@ -21,6 +21,7 @@
 
 (defun cleanup ()
   ;; stop clack
+  (mock-caveman2-app:stop)
   ;; remove directory
   (delete-file (tape-path "testing"))
   (uiop:delete-empty-directory *shelf*))
