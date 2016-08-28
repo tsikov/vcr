@@ -13,6 +13,7 @@
 (asdf:defsystem #:vcr-test
   :description "Test the vcr library"
   :depends-on (:vcr
+	       :mock-caveman2-app
                :prove)
   :defsystem-depends-on (:prove-asdf)
   :components ((:module "t"
