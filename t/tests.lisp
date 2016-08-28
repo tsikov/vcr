@@ -2,8 +2,8 @@
 
 (defpackage vcr-test
   (:use :cl
-        :prove
-	:caveman2
+	:prove
+	:mock-caveman2-app
 	:vcr))
 
 (in-package :vcr-test)
@@ -12,7 +12,7 @@
 
 (defun prepare-tests ()
   ;; start clack
-  (myapp:start :port 8080)
+  (mock-caveman2-app:start :port 8080)
   ;; set *shelf* to random non-existing directory
   (setf *shelf*	(concatenate 'string
 			     "/tmp/"
@@ -24,7 +24,7 @@
   ;; remove directory
   (delete-file (tape-path "testing"))
   (uiop:delete-empty-directory *shelf*))
-  
+
 (defun run-tests ()
 
   (plan 1)

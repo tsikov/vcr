@@ -15,6 +15,8 @@
   :depends-on (:vcr
                :prove)
   :defsystem-depends-on (:prove-asdf)
-  :components ((:test-file "tests"))
+  :components ((:module "t"
+		:components
+	        ((:test-file "tests"))))
   :perform (test-op :after (op c)
                     (funcall (intern #.(string :run) :prove) c)))
