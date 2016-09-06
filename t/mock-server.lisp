@@ -16,25 +16,19 @@
 
 (defparameter *port* 8082)
 
-(defvar *continuously-running* nil)
+;; (defvar *continuously-running* nil)
 
 (defun start ()
-  (if *httpd*
-      (format t "Mock server already running on port ~d" *port*)
-      (progn
-        (setf *httpd*
-              (hunchentoot:start
-               (make-instance 'hunchentoot:acceptor
-                              :port *port*
-                              :access-log-destination *output-stream*)))
-        (format t "Mock server started on port ~d" *port*))))
+  (setf *httpd*
+        (hunchentoot:start
+         (make-instance 'hunchentoot:acceptor
+                        :port *port*
+                        :access-log-destination *output-stream*))))
 
 (defun stop ()
-  (if (not *continuously-running*)
-      (progn
-        (hunchentoot:stop *httpd*)
-        (setf *httpd* nil)
-        (print "Mock server stoped."))))
+  (hunchentoot:stop *httpd*)
+  (setf *httpd* nil)
+  (print "Mock server stoped."))
 
 (defun dump-logs ()
   (get-output-stream-string *output-stream*))
