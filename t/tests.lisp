@@ -62,7 +62,7 @@
   	  "The contents of the drakma response is the same as the tape."))))
 
 (prepare-tests)
-(plan 2)
+(plan 3)
 (run-tests)
 (finalize)
 (cleanup)

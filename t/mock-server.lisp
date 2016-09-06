@@ -19,11 +19,10 @@
 ;; (defvar *continuously-running* nil)
 
 (defun start ()
-  (setf *httpd*
-        (hunchentoot:start
-         (make-instance 'hunchentoot:acceptor
-                        :port *port*
-                        :access-log-destination *output-stream*))))
+  (setf *httpd* (hunchentoot:start
+                 (make-instance 'hunchentoot:acceptor
+                                :port *port*
+                                :access-log-destination *output-stream*))))
 
 (defun stop ()
   (hunchentoot:stop *httpd*)

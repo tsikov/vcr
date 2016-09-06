@@ -25,8 +25,6 @@
   (rest
    (find-if #'(lambda (el) (equal args (car el))) cache)))
 
-;(get-cache-result '("http://localhost:8082") (read-tape "testing"))
-
 (defun record-tape (cache tape)
   (with-open-file (stream (tape-path tape)
 			  :direction :output
