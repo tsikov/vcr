@@ -5,7 +5,7 @@
 (defvar *shelf* "/tmp/vcr/")
 
 (defun tape-path (tape)
-  ;; The following line is inside here, because *shelf*
+  ;; The following line is needed, because *shelf*
   ;; can be changed dynamically.
   (ensure-directories-exist *shelf*)
   (concatenate 'string *shelf* tape ".lisp"))
@@ -20,6 +20,11 @@
 
 (defun store-in-cache (args result cache)
   (acons args (list result) cache))
+
+;; (defun get-cache-result (args cache)
+;;   (find args cache :key #'car))
+
+;(get-cache-result '("http://localhost:8082") (read-tape "testing"))
 
 (defun record-tape (cache tape)
   (with-open-file (stream (tape-path tape)

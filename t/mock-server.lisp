@@ -3,30 +3,43 @@
 (defpackage :mock-server
   (:use :cl)
   (:export :start
-	   :stop))
+	   :stop
+	   :dump-logs
+           :address
+           :*continuously-running*))
 
 (in-package :mock-server)
 
 (defparameter *httpd* nil)
 
-(defparameter *port* 8080)
+(defparameter *output-stream* (make-string-output-stream))
+
+(defparameter *port* 8082)
+
+(defvar *continuously-running* nil)
 
 (defun start ()
-  (setf *httpd*
-    (hunchentoot:start
-     (make-instance 'hunchentoot:acceptor
-		    :port *port*)))
-  (format t "Hunchentoot started on port ~d" *port*))
+  (if *httpd*
+      (format t "Mock server already running on port ~d" *port*)
+      (progn
+        (setf *httpd*
+              (hunchentoot:start
+               (make-instance 'hunchentoot:acceptor
+                              :port *port*
+                              :access-log-destination *output-stream*)))
+        (format t "Mock server started on port ~d" *port*))))
 
 (defun stop ()
-  (hunchentoot:stop *httpd*)
-  (print "Hunchentoot stoped."))
+  (if (not *continuously-running*)
+      (progn
+        (hunchentoot:stop *httpd*)
+        (setf *httpd* nil)
+        (print "Mock server stoped."))))
 
-;; (hunchentoot:define-easy-handler (hello-world (:uri "/hello"))
-;;     ()
-;;   (with-html-output (*standard-output* nil :indent t)
-;;        (:html
-;;               (:head
-;;                  (:title "Hello World"))
-;;               (:body
-;;                  (:p "Hello world!...")))))
+(defun dump-logs ()
+  (get-output-stream-string *output-stream*))
+
+(defun address ()
+  (concatenate 'string
+               "http://localhost:"
+               (write-to-string *port*)))

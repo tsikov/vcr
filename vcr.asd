@@ -15,7 +15,8 @@
 (asdf:defsystem #:vcr-test
   :description "Test the vcr library"
   :depends-on (:vcr
-               :prove)
+               :prove
+	       :hunchentoot)
   :defsystem-depends-on (:prove-asdf)
   :components ((:module "t"
 		:components

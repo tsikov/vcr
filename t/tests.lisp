@@ -25,35 +25,41 @@
 (defun cleanup ()
   ;; stop mock server
   (mock-server:stop)
+  ;; remove tape if exists
+  (if (probe-file (tape-path *testing-tape-name*))
+      (delete-file (tape-path *testing-tape-name*)))
   ;; remove directory
-  (delete-file (tape-path *testing-tape-name*))
   (uiop:delete-empty-directory *shelf*)
   (print "Cleanup completed."))
 
 (defun run-tests ()
-
+  
   (subtest "Shelf and cassette are created if non-existent."
     (is (probe-file *shelf*) nil
 	"Shelf is not available at first.")
     (with-vcr *testing-tape-name*
-      (drakma:http-request "http://localhost:8080"))
+      (drakma:http-request (mock-server:address)))
     (isnt (probe-file *shelf*) nil
 	  "After http request is made shelf is created.")
     (isnt (probe-file (tape-path *testing-tape-name*)) nil
-	  "After http request is made cassette is created.")))
+	  "After http request is made cassette is created."))
 
-  ;; (subtest "The results of the http call are cached."
-  ;;   (is (
+  (subtest "Repeated requests don't reach the server."
+    (with-vcr *testing-tape-name*
+      ;; first request is already made the previous test
+      (isnt (length (mock-server:dump-logs)) 0
+	    "A request is made to the server the first time a page is visited.")
 
-  ;; (subtest "The contents of the cassette are the same as the page visited."
-  ;;   (is (probe-file *shelf*) nil
-  ;; 	"Shelf is not available at first.")
-  ;;   (with-vcr "testing"
-  ;;     (drakma:http-request "http://localhost:8080"))
-  ;;   (isnt (probe-file *shelf*) nil
-  ;; 	  "After http request is made shelf is created.")
-  ;;   (isnt (probe-file (tape-path "testing")) nil
-  ;; 	  "After http request is made cassette is created.")))
+      ;; second request
+      (drakma:http-request (mock-server:address))
+      (is (length (mock-server:dump-logs)) 0
+	  "The second request doesn't reach the server as it is cached.")))
+
+  (subtest "The contents of the cassette are the same as the ones returned by drakma."
+    (let ((drakma-response (drakma:http-request (mock-server:address)))
+          (vcr-response (car (rest (car (read-tape *testing-tape-name*))))))
+      (is drakma-response vcr-response
+  	  "The contents of the drakma response is the same as the tape."))))
 
 (prepare-tests)
 (plan 2)
