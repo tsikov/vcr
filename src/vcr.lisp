@@ -21,8 +21,9 @@
 (defun store-in-cache (args result cache)
   (acons args (list result) cache))
 
-;; (defun get-cache-result (args cache)
-;;   (find args cache :key #'car))
+(defun get-cached-result (args cache)
+  (rest
+   (find-if #'(lambda (el) (equal args (car el))) cache)))
 
 ;(get-cache-result '("http://localhost:8082") (read-tape "testing"))
 
@@ -36,10 +37,7 @@
   `(let ((cache (read-tape ,tape)))
      (setf (symbol-function 'drakma:http-request)
 	   (lambda (&rest args)
-	     (let* ((cache-entry (find-if #'(lambda (el)
-					       (equal args (car el)))
-					   cache))
-		    (cached-result (rest cache-entry)))
+	     (let* ((cached-result (get-cached-result args cache)))
 	       (if cached-result
 		   cached-result
 		   (let ((computed-result (apply #'original-fn args)))
