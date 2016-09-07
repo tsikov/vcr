@@ -39,8 +39,8 @@
 
 (defun get-cached-result (args cache)
   "Gets a record from the cache without the key."
-  (rest
-   (find-if #'(lambda (el) (equal args (car el))) cache)))
+  (first (rest
+   (find-if #'(lambda (el) (equal args (car el))) cache))))
 
 ;; Any suggestions how this macro can be simplified and improved
 ;; are welcomed! :)
