@@ -56,7 +56,10 @@
 	  "The second request doesn't reach the server as it is cached.")))
 
   (subtest "The contents of the cassette are the same as the ones returned by drakma."
-    (let ((drakma-response (drakma:http-request (mock-server:address)))
+    (let ((drakma-response
+           (multiple-value-bind (content code headers)
+               (drakma:http-request (mock-server:address))
+             (list content code headers)))
           (vcr-response (car (rest (car (read-tape *testing-tape-name*))))))
       (is drakma-response vcr-response
   	  "The contents of the drakma response is the same as the tape."))))

@@ -38,7 +38,10 @@
 	     (let* ((cached-result (get-cached-result args cache)))
 	       (if cached-result
 		   cached-result
-		   (let ((computed-result (apply #'original-fn args)))
+		   (let ((computed-result
+                          (multiple-value-bind (content code headers)
+                                (apply #'original-fn args)
+                            (list content code headers))))
 		     (setf cache
 			   (store-in-cache args computed-result cache))
 		     computed-result)))))
