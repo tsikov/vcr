@@ -4,11 +4,15 @@
 ;; no name conflict is possible.
 (setf (symbol-function 'original-fn) #'drakma:http-request)
 
-(defvar *shelf* "/tmp/vcr/")
+(defvar *shelf* "/tmp/vcr/"
+  "The directory holding the cache (tapes). It is exported,
+because Users are expected to configure vcr by changing it. E.g.
+(setf vcr:*shelf*
+      (asdf:system-relative-pathname :my-app :t/))")
 
 ;; helper functions
-
 (defun tape-path (tape)
+  "Retruns the full path of the tape given it's name."
   ;; The following line is needed, because *shelf*
   ;; can be changed dynamically.
   (ensure-directories-exist *shelf*)
@@ -16,9 +20,10 @@
   (setf *shelf* (namestring *shelf*))
   (concatenate 'string *shelf* tape ".lisp"))
 
+;; TODO: Think of a way to read puri:uri and flexi streams
 (defun read-tape (tape)
   "Returns the contents of the file (tape) if found or
-   returns nil if not."
+returns nil if not."
   (let ((tape-path (tape-path tape)))
     (if (probe-file tape-path)
 	(with-open-file (stream
@@ -26,6 +31,7 @@
 		         :direction :input)
 	  (read stream)))))
 
+;; TODO: Think of a way to record puri:uri and flexi streams
 (defun record-tape (cache tape)
   "Write the contents of the cache to a file (tape)."
   (with-open-file (stream (tape-path tape)
