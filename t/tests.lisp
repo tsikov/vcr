@@ -8,7 +8,7 @@
 
 (in-package :vcr-test)
 
-;; configure prove
+;; Make prove print fabulous reports
 (setf prove:*enable-colors* t)
 
 (defparameter *testing-tape-name* "testing")
@@ -60,7 +60,7 @@
            (multiple-value-bind (content code headers)
                (drakma:http-request (mock-server:address))
              (list content code headers)))
-          (vcr-response (car (rest (car (read-tape *testing-tape-name*))))))
+          (vcr-response (cadar (read-tape *testing-tape-name*))))
       (is drakma-response vcr-response
   	  "The contents of the drakma response is the same as the tape."))))
 

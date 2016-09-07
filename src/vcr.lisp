@@ -4,11 +4,15 @@
 ;; no name conflict is possible.
 (setf (symbol-function 'original-fn) #'drakma:http-request)
 
-(defvar *shelf* "/tmp/vcr/"
+(defvar *shelf* "/tmp/"
   "The directory holding the cache (tapes). It is exported,
-because Users are expected to configure vcr by changing it. E.g.
+because users of the library are expected to configure VCR
+by changing it. E.g.
+
 (setf vcr:*shelf*
-      (asdf:system-relative-pathname :my-app :t/))")
+      (asdf:system-relative-pathname :my-app :t/))
+
+The default directory is set to /tmp/")
 
 ;; helper functions
 (defun tape-path (tape)
@@ -18,6 +22,8 @@ because Users are expected to configure vcr by changing it. E.g.
   (ensure-directories-exist *shelf*)
   ;; coerce pathnames to string so they can be concatenated
   (setf *shelf* (namestring *shelf*))
+  ;; A "lisp" extension will make the contents of the cache
+  ;; nicely highlighted by editors
   (concatenate 'string *shelf* tape ".lisp"))
 
 ;; TODO: Think of a way to read puri:uri and flexi streams
@@ -45,8 +51,7 @@ returns nil if not."
 
 (defun get-cached-result (args cache)
   "Gets a record from the cache without the key."
-  (first (rest
-   (find-if #'(lambda (el) (equal args (car el))) cache))))
+  (cadr (find-if #'(lambda (el) (equal args (car el))) cache)))
 
 ;; Any suggestions how this macro can be simplified and improved
 ;; are welcomed! :)
