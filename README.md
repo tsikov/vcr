@@ -22,7 +22,7 @@ Inside your app.
 
 The first time drakma will make a request to "example.com", but if you call the same address withing the same tape again, it will be fetched from the cache.
 
-*NB! When you are using `drakma:http-request inside the lexical clojure of `with-vcr` only the content, response code and headers will be returned no matter if it actually makes a requests or hits the cache.* This is a temporary solution and probably will be fixed in the future.
+*NB! When you are using `drakma:http-request` inside the lexical clojure of `with-vcr` only the content, response code and headers will be returned no matter if it actually makes a requests or hits the cache.* This is a temporary solution and probably will be fixed in the future.
 
 ## Running tests
 
@@ -32,7 +32,4 @@ To run the tests run `(asdf:test-system :vcr)`.
 
 ## Contribution
 
-You are awesome. In order to contribute:
-
-1. Create a PR.
-2. The end.
+To contribute open an issue or make a PR. Thanks!
