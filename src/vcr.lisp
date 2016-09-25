@@ -67,7 +67,7 @@ returns nil if not."
            ;; drakma:http-request function will use. Hopefully
            ;; &rest & apply saves the day.
 	   (lambda (&rest args)
-	     (let* ((cached-result (get-cached-result args cache)))
+	     (let ((cached-result (get-cached-result args cache)))
 	       (if cached-result
 		   cached-result
 		   (let ((computed-result
