@@ -34,7 +34,7 @@
 
 (defun run-tests ()
   
-  (subtest "Shelf and cassette are created if non-existent."
+  (subtest "Shelf and tape are created if non-existent."
     (is (probe-file *shelf*) nil
 	"Shelf is not available at first.")
     (with-vcr *testing-tape-name*
@@ -42,11 +42,11 @@
     (isnt (probe-file *shelf*) nil
 	  "After http request is made shelf is created.")
     (isnt (probe-file (tape-path *testing-tape-name*)) nil
-	  "After http request is made cassette is created."))
+	  "After http request is made tape is created."))
 
   (subtest "Repeated requests don't reach the server."
     (with-vcr *testing-tape-name*
-      ;; first request is already made the previous test
+      ;; first request is already made from the previous test
       (isnt (length (mock-server:dump-logs)) 0
 	    "A request is made to the server the first time a page is visited.")
 
@@ -55,7 +55,7 @@
       (is (length (mock-server:dump-logs)) 0
 	  "The second request doesn't reach the server as it is cached.")))
 
-  (subtest "The contents of the cassette are the same as the ones returned by drakma."
+  (subtest "The contents of the tape are the same as the ones returned by drakma."
     (let ((drakma-response
            (multiple-value-bind (content code headers)
                (drakma:http-request (mock-server:address))
