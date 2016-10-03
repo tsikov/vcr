@@ -5,7 +5,7 @@
   (:export :start
 	   :stop
 	   :dump-logs
-           :address
+           :*address*
            :*continuously-running*))
 
 (in-package :mock-server)
@@ -15,6 +15,8 @@
 (defparameter *output-stream* (make-string-output-stream))
 
 (defparameter *port* 8082)
+
+(defparameter *address* (format nil "http://localhost:~A" *port*))
 
 ;; (defvar *continuously-running* nil)
 
@@ -32,7 +34,3 @@
 (defun dump-logs ()
   (get-output-stream-string *output-stream*))
 
-(defun address ()
-  (concatenate 'string
-               "http://localhost:"
-               (write-to-string *port*)))

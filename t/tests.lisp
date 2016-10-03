@@ -38,7 +38,7 @@
     (is (probe-file *shelf*) nil
 	"Shelf is not available at first.")
     (with-vcr *testing-tape-name*
-      (drakma:http-request (mock-server:address)))
+      (drakma:http-request mock-server:*address*))
     (isnt (probe-file *shelf*) nil
 	  "After http request is made shelf is created.")
     (isnt (probe-file (tape-path *testing-tape-name*)) nil
@@ -51,14 +51,14 @@
 	    "A request is made to the server the first time a page is visited.")
 
       ;; second request
-      (drakma:http-request (mock-server:address))
+      (drakma:http-request mock-server:*address*)
       (is (length (mock-server:dump-logs)) 0
 	  "The second request doesn't reach the server as it is cached.")))
 
   (subtest "The contents of the tape are the same as the ones returned by drakma."
     (let ((drakma-response
            (multiple-value-bind (content code headers)
-               (drakma:http-request (mock-server:address))
+               (drakma:http-request mock-server:*address*)
              (list content code headers)))
           (vcr-response (cadar (read-tape *testing-tape-name*))))
       (is drakma-response vcr-response
