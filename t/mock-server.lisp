@@ -5,12 +5,11 @@
   (:export :start
 	   :stop
 	   :dump-logs
-           :*address*
-           :*continuously-running*))
+           :*address*))
 
 (in-package :mock-server)
 
-(defparameter *httpd* nil)
+(defvar *httpd* nil)
 
 (defparameter *output-stream* (make-string-output-stream))
 
@@ -18,7 +17,6 @@
 
 (defparameter *address* (format nil "http://localhost:~A" *port*))
 
-;; (defvar *continuously-running* nil)
 (setf hunchentoot:*dispatch-table*
       `(,(hunchentoot:create-prefix-dispatcher "" 'hello-page)))
 
@@ -26,16 +24,15 @@
   "<html><body>Hello World!</body></html>")
 
 (defun start ()
-  (setf *httpd* (hunchentoot:start
-                 (make-instance 'hunchentoot:acceptor
-                                :port *port*
-                                :access-log-destination *output-stream*))))
+  (setf *httpd* (make-instance 'hunchentoot:easy-acceptor
+                               :port *port*
+                               :access-log-destination
+                               *output-stream*))
+  (hunchentoot:start *httpd*))
 
 (defun stop ()
   (hunchentoot:stop *httpd*)
-  (setf *httpd* nil)
   (print "Mock server stoped."))
 
 (defun dump-logs ()
   (get-output-stream-string *output-stream*))
-

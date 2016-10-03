@@ -18,8 +18,9 @@
   (mock-server:start)
   ;; set *shelf* to random non-existing directory
   (setf *shelf*
-        (format nil "/tmp/~A/" (write-to-string (get-universal-time)))))
-     
+        (format nil "/tmp/~A/" (write-to-string
+                                (get-universal-time)))))
+
 (defun cleanup ()
   ;; stop mock server
   (mock-server:stop)
