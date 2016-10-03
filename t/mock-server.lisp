@@ -19,6 +19,11 @@
 (defparameter *address* (format nil "http://localhost:~A" *port*))
 
 ;; (defvar *continuously-running* nil)
+(setf hunchentoot:*dispatch-table*
+      `(,(hunchentoot:create-prefix-dispatcher "" 'hello-page)))
+
+(defun hello-page ()
+  "<html><body>Hello World!</body></html>")
 
 (defun start ()
   (setf *httpd* (hunchentoot:start
