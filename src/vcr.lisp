@@ -24,7 +24,7 @@ The default directory is set to /tmp/")
   (setf *shelf* (namestring *shelf*))
   ;; A "lisp" extension will make the contents of the cache
   ;; nicely highlighted by editors
-  (concatenate 'string *shelf* tape ".lisp"))
+  (format nil "~A~A.lisp" *shelf* tape))
 
 ;; TODO: Think of a way to read puri:uri and flexi streams
 (defun read-tape (tape)
