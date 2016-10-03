@@ -60,7 +60,11 @@
              (list content code headers)))
           (vcr-response (cadar (read-tape *testing-tape-name*))))
       (is drakma-response vcr-response
-  	  "The contents of the drakma response is the same as the tape."))))
+  	  "The contents of the drakma response is the same as the tape.")
+      (is (apply #'values drakma-response)
+          (with-vcr *testing-tape-name*
+            (drakma:http-request mock-server:*address*))
+          "VCR returns the results from the cache as multiple values and not as a list"))))
 
 (prepare-tests)
 (plan 3)

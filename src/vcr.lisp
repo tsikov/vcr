@@ -53,6 +53,10 @@ returns nil if not."
   "Gets a record from the cache without the key."
   (cadr (find-if #'(lambda (el) (equal args (car el))) cache)))
 
+(defun as-values (lst)
+  "Transform a list into a list of values."
+  (apply #'values lst))
+
 ;; Any suggestions how this macro can be simplified and improved
 ;; are welcomed! :)
 (defmacro with-vcr (tape &body body)
@@ -69,7 +73,9 @@ returns nil if not."
 	   (lambda (&rest args)
 	     (let ((cached-result (get-cached-result args cache)))
 	       (if cached-result
-		   cached-result
+                   ;; The result of the `drakma:http-request` must
+                   ;; be returned as multiple values instead of a list
+                   (as-values cached-result)
 		   (let ((computed-result
 
                           ;; Temporary omit the puri:uri and the
@@ -88,7 +94,7 @@ returns nil if not."
                      ;; Return the computed result. (If we didn't have
                      ;; put it there the whole cache would have been
                      ;; returned instead)
-		     computed-result)))))
+		     (as-values computed-result))))))
 
      ;; PROG1 is used, to return the result of the ,@body
      ;; as after finishing the work we need to set back
