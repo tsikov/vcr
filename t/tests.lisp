@@ -21,6 +21,10 @@
         (format nil "/tmp/~A/" (write-to-string
                                 (get-universal-time)))))
 
+(defun simple-mock-requst ()
+  (with-vcr *testing-tape-name*
+    (drakma:http-request mock-server:*address*)))
+
 (defun cleanup ()
   ;; stop mock server
   (mock-server:stop)
@@ -36,23 +40,20 @@
   (subtest "Shelf and tape are created if non-existent."
     (is (probe-file *shelf*) nil
 	"Shelf is not available at first.")
-    (with-vcr *testing-tape-name*
-      (drakma:http-request mock-server:*address*))
+    (simple-mock-requst)
     (isnt (probe-file *shelf*) nil
 	  "After http request is made shelf is created.")
     (isnt (probe-file (tape-path *testing-tape-name*)) nil
 	  "After http request is made tape is created."))
 
   (subtest "Repeated requests don't reach the server."
-    (with-vcr *testing-tape-name*
       ;; first request is already made from the previous test
       (isnt (length (mock-server:dump-logs)) 0
 	    "A request is made to the server the first time a page is visited.")
-
       ;; second request
-      (drakma:http-request mock-server:*address*)
+      (simple-mock-requst)
       (is (length (mock-server:dump-logs)) 0
-	  "The second request doesn't reach the server as it is cached.")))
+	  "The second request doesn't reach the server as it is cached."))
 
   (subtest "The contents of the tape are the same as the ones returned by drakma."
     (let ((drakma-response
@@ -63,9 +64,8 @@
       (is drakma-response vcr-response
   	  "The contents of the drakma response is the same as the tape.")
       (is (apply #'values drakma-response)
-          (with-vcr *testing-tape-name*
-            (drakma:http-request mock-server:*address*))
-          "VCR returns the results from the cache as multiple values and not as a list"))))
+          (simple-mock-requst)
+          "VCR returns the results from the cache as multiple values and not as a list")))
 
 (prepare-tests)
 (plan 3)
