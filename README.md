@@ -8,6 +8,17 @@ The library works only for `drakma:http-request`. Pull requests for supporting o
 
 The library is not on quicklisp yet. To use it just clone it inside a directory from which ASDF can load it. Then run `(ql:quickload :vcr)` to experiment with it in the command line or include it in the `:depends-on` list inside your application's asd configuration file.
 
+## Configuration
+
+You can set the default directory (called "\*shelf\*") with the following command:
+
+```
+(setf vcr:*shelf*
+      (asdf:system-relative-pathname :my-app :t/cassettes/))
+```
+
+(where `:my-app` is the name of your application. duh...) 
+
 ## Usage
 
 Inside your app.

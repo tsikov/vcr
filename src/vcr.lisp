@@ -10,7 +10,7 @@ because users of the library are expected to configure VCR
 by changing it. E.g.
 
 (setf vcr:*shelf*
-      (asdf:system-relative-pathname :my-app :t/))
+      (asdf:system-relative-pathname :my-app :t/cassettes/))
 
 The default directory is set to /tmp/")
 
