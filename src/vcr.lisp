@@ -102,7 +102,7 @@ returns nil if not."
      ;; unmemoized version. This way users of the library
      ;; can continue using drakma:http-request as usual
      ;; outside the lexical environment created by the with-vcr
-     ;; clojure.
+     ;; closure.
      (prog1
 	 (progn ,@body)
        (setf (symbol-function 'drakma:http-request)
