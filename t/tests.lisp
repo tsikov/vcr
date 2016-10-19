@@ -62,7 +62,8 @@
              (list content code headers)))
           (vcr-response (cadar (read-tape *testing-tape-name*))))
       (is drakma-response vcr-response
-  	  "The contents of the drakma response is the same as the tape.")
+  	  "The contents of the drakma response is the same as the tape."
+          :test #'equalp)
       (is (apply #'values drakma-response)
           (simple-mock-requst)
           "VCR returns the results from the cache as multiple values and not as a list")))
