@@ -3,7 +3,7 @@
 (asdf:defsystem #:vcr
   :description "Store and replay results of http calls for easier testing of external services"
   :author "Petko Tsikov <tsikov@gmail.com>"
-  :license "Public Domain"
+  :license "MIT"
   :serial t
   :components ((:module "src"
 		:components

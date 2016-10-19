@@ -41,6 +41,7 @@ VCR uses prove as a testing framework.
 
 To run the tests run `(asdf:test-system :vcr)`.
 
-## Contribution
+## Issues / Contribution
 
-To contribute open an issue or make a PR. Thanks!
+If you have issues - open a github issue or contact me at `tsikov AT gmail DOT com`
+If you want to contribute - open an issue or make a PR. Thanks!
