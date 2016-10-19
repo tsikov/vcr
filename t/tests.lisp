@@ -67,8 +67,17 @@
           (simple-mock-requst)
           "VCR returns the results from the cache as multiple values and not as a list")))
 
+  (subtest "Turn on the ability to print to a designated stream"
+    (is-print (simple-mock-requst) ""
+              "Logging is turned off by default")
+    (setf *log-output* *standard-output*)
+    (is-print (simple-mock-requst) ""
+              "But can be turned on")
+    ;; let's turn it off again
+    (setf *log-output* nil)))
+
 (prepare-tests)
-(plan 3)
+(plan 4)
 (run-tests)
 (finalize)
 (cleanup)

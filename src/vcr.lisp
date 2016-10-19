@@ -14,6 +14,10 @@ by changing it. E.g.
 
 The default directory is set to /tmp/")
 
+;; (defvar *log-output* (make-synonym-stream '*standard-output*))
+;; Logging is turned off by default
+(defparameter *log-output* nil)
+
 ;; helper functions
 (defun tape-path (tape)
   "Retruns the full path of the tape given it's name."
@@ -57,6 +61,9 @@ returns nil if not."
   "Transform a list into a list of values."
   (apply #'values lst))
 
+(defun log-msg (msg)
+  (format *log-output* msg))
+
 ;; Any suggestions how this macro can be simplified and improved
 ;; are welcomed! :)
 (defmacro with-vcr (tape &body body)
@@ -73,9 +80,12 @@ returns nil if not."
 	   (lambda (&rest args)
 	     (let ((cached-result (get-cached-result args cache)))
 	       (if cached-result
-                   ;; The result of the `drakma:http-request` must
-                   ;; be returned as multiple values instead of a list
-                   (as-values cached-result)
+                   (progn
+                     (log-msg "VCR: cache HIT")
+                     
+                     ;; The result of the `drakma:http-request` must
+                     ;; be returned as multiple values instead of a list
+                     (as-values cached-result))
 		   (let ((computed-result
 
                           ;; Temporary omit the puri:uri and the
@@ -90,6 +100,8 @@ returns nil if not."
                      ;; we need to put it inside the cache.
 		     (setf cache
 			   (store-in-cache args computed-result cache))
+
+                     (log-msg "VCR: cache MISS")
 
                      ;; Return the computed result. (If we didn't have
                      ;; put it there the whole cache would have been
