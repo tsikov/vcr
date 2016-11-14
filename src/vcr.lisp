@@ -14,6 +14,8 @@ by changing it. E.g.
 
 The default directory is set to /tmp/")
 
+(defparameter *url-only-cache-hits* nil)
+
 ;; (defvar *log-output* (make-synonym-stream '*standard-output*))
 ;; Logging is turned off by default
 (defparameter *log-output* nil)
@@ -55,7 +57,9 @@ returns nil if not."
 
 (defun get-cached-result (args cache)
   "Gets a record from the cache without the key."
-  (cadr (find-if #'(lambda (el) (equal args (car el))) cache)))
+  (if *url-only-cache-hits*
+      (cadr (assoc (car args) cache :test #'string= :key #'car))
+      (cadr (find-if #'(lambda (el) (equal args (car el))) cache))))
 
 (defun as-values (lst)
   "Transform a list into a list of values."

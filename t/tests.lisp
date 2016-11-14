@@ -75,7 +75,22 @@
     (is-print (simple-mock-requst) ""
               "But can be turned on")
     ;; let's turn it off again
-    (setf *log-output* nil)))
+    (setf *log-output* nil))
+
+  ;; 
+  (subtest "Make it possible to turn on url-only cache hits."
+    (setf vcr:*url-only-cache-hits* t)
+    (with-vcr *testing-tape-name*
+      (drakma:http-request mock-server:*address*
+                           :method :post
+                           :content (write-to-string
+                                     (random 99999999999999999999999999)))
+      (drakma:http-request mock-server:*address*
+                           :method :post
+                           :content (write-to-string
+                                     (random 99999999999999999999999999)))))
+  (subtest ""
+    (ok t)))
 
 (prepare-tests)
 (plan 4)
