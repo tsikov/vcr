@@ -7,9 +7,8 @@
   :serial t
   :components ((:module "src"
 		:components
-		((:file "package")
-                 (:file "vcr"))))
-  :depends-on (:drakma)
+                ((:file "vcr"))))
+  :depends-on ()
   :in-order-to ((test-op (test-op vcr-test))))
 
 (asdf:defsystem #:vcr-test

@@ -1,3 +1,13 @@
+(in-package #:cl-user)
+(defpackage #:vcr
+  (:use #:cl)
+  (:export #:*shelf*
+           #:*log-output*
+           #:*url-only-cache-hits*
+           #:*original-fn-symbol*
+           #:tape-path ; not really needed, but can be useful
+           #:read-tape ; not really needed, but can be useful
+	   #:with-vcr))
 (in-package #:vcr)
 
 ;; The symbol original-fn is internal for the package so
