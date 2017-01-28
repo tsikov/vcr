@@ -2,8 +2,6 @@
 
 Store and replay results of http calls for easier testing of external services.
 
-The library works only for `drakma:http-request`. Pull requests for supporting other libraries are welcomed.
-
 ## Installation
 
 The library is not on quicklisp yet. To use it just clone it inside a directory from which ASDF can load it. Then run `(ql:quickload :vcr)` to experiment with it in the command line or include it in the `:depends-on` list inside your application's asd configuration file.
@@ -18,6 +16,12 @@ You can set the default directory (called "\*shelf\*") with the following comman
 ```
 
 (where `:my-app` is the name of your application. duh...) 
+
+The default request function is `drakma:http-request`. However, if you want, you can set a different one with:
+
+```
+(setf vcr:*original-fn-symbol* 'dex:get)
+```
 
 ## Usage
 
