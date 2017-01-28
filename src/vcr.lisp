@@ -29,7 +29,9 @@ by changing it. E.g.
 
 The default directory is set to /tmp/")
 
-(defparameter *url-only-cache-hits* nil)
+(defparameter *url-only-cache-hits* nil
+  "Specifies whether the cache is hit when a response with the same URL,
+method and options are present in the cache or just the URL.")
 
 ;; (defvar *log-output* (make-synonym-stream '*standard-output*))
 ;; Logging is turned off by default
