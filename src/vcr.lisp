@@ -10,9 +10,14 @@
 	   #:with-vcr))
 (in-package #:vcr)
 
+;; Let's define a dynamic variable that will let the user select
+;; a different request function.
+(defparameter *original-fn-symbol* 'drakma:http-request)
+
 ;; The symbol original-fn is internal for the package so
 ;; no name conflict is possible.
-(setf (symbol-function 'original-fn) #'drakma:http-request)
+(setf (symbol-function 'original-fn)
+      (symbol-function *original-fn-symbol*))
 
 (defvar *shelf* "/tmp/"
   "The directory holding the cache (tapes). It is exported,
@@ -84,12 +89,12 @@ returns nil if not."
   `(let ((cache (read-tape ,tape)))
 
      ;; The following code creates a memoized version
-     ;; of the drakma:http-request function and replaces
-     ;; the original function.
-     (setf (symbol-function 'drakma:http-request)
+     ;; of the request function (e.g. drakma:http-request)
+     ;; function and replaces the original function.
+     (setf (symbol-function *original-fn-symbol*)
 
            ;; We don't know how many arguments the users of the
-           ;; drakma:http-request function will use. Hopefully
+           ;; request function will use. Hopefully
            ;; &rest & apply saves the day.
 	   (lambda (&rest args)
 	     (let ((cached-result (get-cached-result args cache)))
@@ -97,7 +102,7 @@ returns nil if not."
                    (progn
                      (log-msg "VCR: cache HIT")
                      
-                     ;; The result of the `drakma:http-request` must
+                     ;; The result of the request function must
                      ;; be returned as multiple values instead of a list
                      (as-values cached-result))
 		   (let ((computed-result
@@ -124,13 +129,13 @@ returns nil if not."
 
      ;; PROG1 is used, to return the result of the ,@body
      ;; as after finishing the work we need to set back
-     ;; the drakma:http-request function to it's original
-     ;; unmemoized version. This way users of the library
-     ;; can continue using drakma:http-request as usual
-     ;; outside the lexical environment created by the with-vcr
-     ;; closure.
+     ;; the request function to it's original unmemoized
+     ;; version. This way users of the library can continue
+     ;; using the request function as usual outside the
+     ;; lexical environment created by the with-vcr closure.
      (prog1
 	 (progn ,@body)
-       (setf (symbol-function 'drakma:http-request)
+       (setf (symbol-function *original-fn-symbol*)
 	     #'original-fn)
        (record-tape cache ,tape))))
+

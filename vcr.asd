@@ -13,10 +13,12 @@
 
 (asdf:defsystem #:vcr-test
   :description "Test the vcr library"
-  :depends-on (:vcr
-               :prove
-	       :hunchentoot)
-  :defsystem-depends-on (:prove-asdf)
+  :depends-on (#:vcr
+               #:prove
+               #:hunchentoot
+               #:drakma
+               #:dexador)
+  :defsystem-depends-on (#:prove-asdf)
   :components ((:module "t"
 		:components
 	        ((:file "mock-server")
