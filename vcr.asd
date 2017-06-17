@@ -8,7 +8,7 @@
   :components ((:module "src"
 		:components
                 ((:file "vcr"))))
-  :depends-on ()
+  :depends-on (#:drakma)
   :in-order-to ((test-op (test-op vcr-test))))
 
 (asdf:defsystem #:vcr-test
